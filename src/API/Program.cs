@@ -20,6 +20,8 @@ builder.Services.ConfigureApplication();
 
 builder.Services.ConfigureIdentity(builder.Configuration);
 
+builder.Services.ConfigureApiService();
+
 builder.Services.ConfigureCronJob();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
