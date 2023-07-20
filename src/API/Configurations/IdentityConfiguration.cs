@@ -53,6 +53,11 @@ public static class IdentityConfiguration
         policy.RequireRole("admin")
           .RequireAuthenticatedUser();
       });
+
+      opt.AddPolicy("SignedInUser", policy =>
+      {
+        policy.RequireAuthenticatedUser();
+      });
     });
 
     services.AddOptions<JwtOption>().Bind(configuration.GetSection("Jwt"));
