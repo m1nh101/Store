@@ -22,6 +22,7 @@ public class Product : Entity
   public string Name { get; private set; } = string.Empty;
   public string Brand { get; private set; } = string.Empty;
   public double Price { get; private set; }
+  public int Stock { get; private set; }
   public ProductState State { get; private set; } = ProductState.New;
 
   public void ChangeStatusTo(ProductState state) => State = state;
@@ -40,6 +41,8 @@ public class Product : Entity
     Brand = product.Brand;
     Price = product.Price;
   }
+
+  public void UpdateStock(int stock) => Stock = stock;
 
   public void AddImages(params string[] urls)
   {
