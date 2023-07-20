@@ -14,6 +14,7 @@
     </PackageReference>
     <PackageReference Include="Quartz" Version="3.6.3" />
     <PackageReference Include="Redis.OM" Version="0.5.2" />
+    <PackageReference Include="Stripe.net" Version="41.24.0" />
   </ItemGroup>
 
   <ItemGroup>
