@@ -8,6 +8,7 @@ namespace API.Endpoints;
 
 public static class IdentityEndpoint
 {
+  private const string ENDPONT_TAG = "Identity";
   private const string SIGN_IN = "/api/identity/auth";
   private const string SIGN_UP = "/api/identity/register";
   private const string SIGN_OUT = "/api/identity/logout";
@@ -29,7 +30,9 @@ public static class IdentityEndpoint
 
       return Results.BadRequest(response.Error);
 
-    });
+    }).WithOpenApi()
+      .WithName("Sign In")
+      .WithTags(ENDPONT_TAG);
 
     app.MapPost(SIGN_UP, async ([FromServices] IMediator mediator,
       HttpContext http,
@@ -45,14 +48,20 @@ public static class IdentityEndpoint
       }
 
       return Results.BadRequest(response.Error);
-    });
+    }).WithOpenApi()
+      .WithName("register new user")
+      .WithTags(ENDPONT_TAG);
 
     app.MapDelete(SIGN_OUT, (HttpContext http) =>
     {
       http.Response.Cookies.Delete("access_token");
 
       return Results.NoContent();
-    });
+    }).WithOpenApi()
+      .WithName("Sign out")
+      .WithDescription("remove access_token")
+      .WithTags(ENDPONT_TAG)
+      .RequireAuthorization("SignedUser");
 
     return app;
   }

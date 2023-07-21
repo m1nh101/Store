@@ -6,6 +6,7 @@ namespace API.Endpoints;
 
 public static class SaleEndpoint
 {
+  private const string TAG_NAME = "Sale Campain";
   private const string POST_SALE = "/api/sales";
 
   public static WebApplication SetupSaleEndpoint(this WebApplication app)
@@ -21,7 +22,9 @@ public static class SaleEndpoint
 
       return Results.BadRequest(response.Error);
 
-    }).RequireAuthorization("SuperUser");
+    }).RequireAuthorization("SuperUser")
+      .WithOpenApi()
+      .WithTags(TAG_NAME);
 
     return app;
   }

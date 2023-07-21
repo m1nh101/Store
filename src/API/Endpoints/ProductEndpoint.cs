@@ -8,6 +8,7 @@ namespace API.Endpoints;
 
 public static class ProductEndpoint
 {
+  private const string TAG_NAME = "Product";
   private const string GET_PRODUCTS = "/api/products/search";
   private const string POST_PRODUCTS = "/api/products";
   private const string PATCH_PRODUCTS = "/api/products/{id}";
@@ -19,7 +20,8 @@ public static class ProductEndpoint
       var response = await mediator.Send(request);
 
       return Results.Ok(response);
-    });
+    }).WithOpenApi()
+      .WithTags(TAG_NAME);
 
     app.MapPost(POST_PRODUCTS, async ([FromServices] IMediator mediator, [FromBody] AddNewProductRequest request) =>
     {
@@ -29,7 +31,8 @@ public static class ProductEndpoint
         return Results.BadRequest(response.Error);
 
       return Results.Ok(response.Data);
-    });
+    }).WithOpenApi()
+      .WithTags(TAG_NAME);
 
     app.MapPatch(PATCH_PRODUCTS, async ([FromServices] IMediator mediator,
       [FromRoute] string id,
@@ -44,7 +47,8 @@ public static class ProductEndpoint
         return Results.Ok(response.Data);
 
       return Results.BadRequest(response.Error);
-    });
+    }).WithOpenApi()
+      .WithTags(TAG_NAME);
 
     return app;
   }
