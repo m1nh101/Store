@@ -1,4 +1,6 @@
-﻿namespace Domain.Entities.Baskets;
+﻿using Domain.Exceptions;
+
+namespace Domain.Entities.Baskets;
 
 public class Basket
 {
@@ -32,8 +34,8 @@ public class Basket
   /// <returns>total basket price after item change</returns>
   public double RemoveItem(string productId)
   {
-    var existItem = Items.FirstOrDefault(e => e.ProductId == productId) 
-      ?? throw new NullReferenceException(nameof(productId));
+    var existItem = Items.FirstOrDefault(e => e.ProductId == productId)
+      ?? throw new DomainException($"product id: {productId} not found in basket");
 
     Items.Remove(existItem);
 

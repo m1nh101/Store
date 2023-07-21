@@ -1,0 +1,40 @@
+# Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP.NET Core service.
+
+version: '3.4'
+
+services:
+  api:
+    image: api
+    build:
+      context: .
+      dockerfile: src/API/Dockerfile
+    environment:
+      - DatabaseServer=database
+      - DatabasePassword=M1ng@2002
+      - RedisHost=redis-stack
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=M1ng@2002
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+    ports:
+      - 7284:443
+    depends_on:
+      - redis-stack
+      - database
+    volumes:
+      - ~/.aspnet/https:/https:ro
+    expose:
+      - 443
+
+  redis-stack:
+    image: redis/redis-stack
+    expose:
+      - 6379
+
+  database:
+    image: mcr.microsoft.com/mssql/server
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=M1ng@2002
+    expose:
+      - 1433

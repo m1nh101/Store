@@ -1,5 +1,6 @@
 ﻿using Application.Baskets.AddItem;
 using Application.Baskets.Get;
+using Application.Baskets.RemoveItem;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,6 +10,7 @@ public static class BasketEndpoint
 {
   private const string GET_BASKET = "/api/baskets";
   private const string ADD_ITEM = "/api/baskets/items";
+  private const string REMOVE_ITEM = "/api/baskets/items/{id}";
 
   public static WebApplication SetupBasketEndpoint(this WebApplication app)
   {
@@ -30,6 +32,19 @@ public static class BasketEndpoint
         return Results.BadRequest(response.Error);
 
       return Results.Ok(response.Data);
+    });
+
+    app.MapDelete(REMOVE_ITEM, async ([FromServices] IMediator mediator,
+      [FromRoute] string id) =>
+    {
+      var request = new RemoveItemRequest() { ProductId = id };
+
+      var response = await mediator.Send(request);
+
+      if (response.Error == null)
+        return Results.Ok(response.Data);
+
+      return Results.BadRequest(response.Error);
     });
 
     return app;

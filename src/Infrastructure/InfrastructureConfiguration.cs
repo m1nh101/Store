@@ -15,15 +15,23 @@ public static class InfrastructureConfiguration
   {
     services.AddDbContext<StoreContext>(opt =>
     {
-      opt.UseSqlServer(configuration.GetConnectionString("StoreConn"),
-        x => x.MigrationsAssembly(typeof(InfrastructureConfiguration).Assembly.FullName));
+      var isDockerHost = !string.IsNullOrEmpty(configuration["DatabaseServer"]);
+      string? connection;
+
+      if (isDockerHost)
+        connection = $"Server={configuration["DatabaseServer"]};UID=sa;PWD={configuration["DatabasePassword"]};Database=StoreDb;Encrypt=False";
+      else
+        connection = configuration.GetConnectionString("StoreConn");
+
+      opt.UseSqlServer(connection,
+      x => x.MigrationsAssembly(typeof(InfrastructureConfiguration).Assembly.FullName));
     });
 
     services.AddSingleton<IRedisConnectionProvider>(sp =>
     {
       var connection = new RedisConnectionConfiguration
       {
-        Host = configuration["Redis:Host"] ?? "localhost",
+        Host = configuration["Redis:Host"] ?? configuration["RedisHost"] ?? "localhost",
         Port = Convert.ToInt32(configuration["Redis:Port"] ?? "6379")
       };
 
@@ -32,6 +40,8 @@ public static class InfrastructureConfiguration
 
     services.AddScoped<IStoreContext, StoreContext>();
     services.AddScoped<IBasketRepository, BasketRepository>();
+
+    services.AddSingleton<DatabaseMigration>();
 
     return services;
   }

@@ -21,6 +21,8 @@ public sealed class AddNewProductRequestHandler
     if(request.Images != null)
       product.AddImages(request.Images);
 
+    product.UpdateStock(request.Stock);
+
     await _context.Products.AddAsync(product, cancellationToken);
 
     await _context.Commit(cancellationToken);

@@ -28,7 +28,7 @@ public sealed class SearchingProductSpecification : Specification<Product>
     {
       Id = e.Id.ToString(),
       Name = e.Name,
-      Price = e.Price,
+      Price = e.Sale == null ? e.Price : e.Price - (e.Price * e.Sale.Value / 100),
       Image = e.Images.First().Url,
     };
   }

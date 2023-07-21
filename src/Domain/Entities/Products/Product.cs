@@ -1,5 +1,6 @@
 using Domain.Abstracts;
 using Domain.Enums;
+using Domain.Exceptions;
 using Domain.ValueObjects;
 
 namespace Domain.Entities.Products;
@@ -42,7 +43,13 @@ public class Product : Entity
     Price = product.Price;
   }
 
-  public void UpdateStock(int stock) => Stock = stock;
+  public void UpdateStock(int stock)
+  {
+    if (stock < 0)
+      throw new DomainException("stock can be negative");
+
+    Stock = stock;
+  }
 
   public void AddImages(params string[] urls)
   {

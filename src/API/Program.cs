@@ -3,10 +3,13 @@ using Application;
 using API.Endpoints;
 using API.Configurations;
 using API.BackgroundServices;
+using API.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddLogging();
 
 builder.Services.AddHttpContextAccessor();
 
@@ -28,6 +31,7 @@ builder.Services.ConfigureApiService();
 builder.Services.ConfigureCronJob();
 
 builder.Services.AddHostedService<RedisIndexCreationService>();
+builder.Services.AddHostedService<DatabaseMigrationService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -49,6 +53,8 @@ app.UseCookiePolicy();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.SetupIdentityEndpoint();
 app.SetupProductEndPoint();
