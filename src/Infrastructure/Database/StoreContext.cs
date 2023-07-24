@@ -1,16 +1,22 @@
-﻿using Application.Contracts;
+﻿using Application.Common;
+using Application.Contracts;
 using Domain.Abstracts;
 using Domain.Entities.Products;
 using Domain.Entities.Users;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Database;
 
 public class StoreContext : DbContext, IStoreContext
 {
-  public StoreContext(DbContextOptions<StoreContext> option)
+  private readonly IMediator _mediator;
+
+  public StoreContext(DbContextOptions<StoreContext> option,
+    IMediator mediator)
     : base(option)
   {
+    _mediator = mediator;
   }
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -20,14 +26,22 @@ public class StoreContext : DbContext, IStoreContext
     modelBuilder.ApplyConfigurationsFromAssembly(typeof(StoreContext).Assembly);
   }
 
-  public Task Commit(CancellationToken cancellationToken = default)
+  public async Task Commit(CancellationToken cancellationToken = default)
   {
     foreach (var entry in ChangeTracker.Entries<Entity>())
     {
       entry.Entity.LastTimeModified = DateTime.UtcNow;
     }
 
-    return base.SaveChangesAsync(cancellationToken);
+    foreach (var entry in ChangeTracker.Entries<AggregateRoot>())
+    {
+      var events = entry.Entity.Events;
+
+      foreach (var @event in events)
+        await _mediator.Publish(new EventNotification<IDomainEvent> { Event = @event }, cancellationToken);
+    }
+
+    await base.SaveChangesAsync(cancellationToken);
   }
 
   public DbSet<Product> Products => Set<Product>();
