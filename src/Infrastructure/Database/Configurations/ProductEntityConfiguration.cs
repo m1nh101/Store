@@ -31,6 +31,9 @@ public sealed class ProductEntityConfiguration : IEntityTypeConfiguration<Produc
       .HasForeignKey(e => e.SaleId)
       .IsRequired(false);
 
+    builder.Property(e => e.Price)
+      .HasField("_price");
+
     builder.OwnsMany(e => e.Images, sp =>
     {
       sp.ToTable("Images");

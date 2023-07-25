@@ -25,7 +25,9 @@ public sealed class AddItemRequestHandler : IRequestHandler<AddItemRequest, Hand
   {
     var productSpecification = new GetProductById(request.ProductId);
 
-    var product = await _context.Products.FirstOrDefaultAsync(productSpecification.ToExpression(), cancellationToken);
+    var product = await _context.Products
+      .Include(e => e.Sale)
+      .FirstOrDefaultAsync(productSpecification.ToExpression(), cancellationToken);
 
     if (product is null)
       return HandleResponse.Fail(new { Message = "product not found" });

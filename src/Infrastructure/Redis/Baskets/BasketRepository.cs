@@ -27,7 +27,7 @@ public sealed class BasketRepository : IBasketRepository
     return basket;
   }
 
-  public void RemoveBasket(string userId) => _provider.Connection.Unlink($"Basket:{userId}");
+  public void RemoveBasket(string userId) => _provider.Connection.Unlink($"Baskets:{userId}");
 
   public async Task Save(Basket source)
   {

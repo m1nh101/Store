@@ -1,4 +1,5 @@
 using Domain.Abstracts;
+using Domain.Enums;
 using Domain.Events;
 using Domain.ValueObjects;
 
@@ -8,19 +9,22 @@ public class Order : AggregateRoot
 {
   private Order() { }
 
-  public int Id { get; set; }
-  public Address Address { get; set; } = null!;
-  public DateTime PaidTime { get; set; }
-  public Identitifer UserId { get; set; } = null!;
+  public int Id { get; private set; }
+  public Address Address { get; private set; } = null!;
+  public DateTime PaidTime { get; private set; }
+  public Identitifer UserId { get; private set; } = null!;
+  public OrderState Status { get; private set; }
 
-  public IEnumerable<OrderItem> Items { get; set; } = null!;
+  public void ChangeStatus(OrderState state) => Status = state;
 
-  public static Order Create(string userId, Address address, IEnumerable<OrderItem> items)
+  public IEnumerable<OrderItem> Items { get; private set; } = null!;
+
+  public static Order Create(string userId, IEnumerable<OrderItem> items)
   {
     var order = new Order
     {
       UserId = Identitifer.Init(userId),
-      Address = address,
+      Address = new Address { Address1 = "temp"},
       Items = items
     };
 

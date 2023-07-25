@@ -1,6 +1,7 @@
 ﻿using Application.Common;
 using Application.Contracts;
 using Domain.Abstracts;
+using Domain.Entities.Orders;
 using Domain.Entities.Products;
 using Domain.Entities.Users;
 using MediatR;
@@ -38,14 +39,14 @@ public class StoreContext : DbContext, IStoreContext
       var events = entry.Entity.Events;
 
       foreach (var @event in events)
-        await _mediator.Publish(new EventNotification<IDomainEvent> { Event = @event }, cancellationToken);
+        await _mediator.Publish(@event, cancellationToken);
     }
 
     await base.SaveChangesAsync(cancellationToken);
   }
 
   public DbSet<Product> Products => Set<Product>();
-
   public DbSet<User> Users => Set<User>();
   public DbSet<Sale> Sales => Set<Sale>();
+  public DbSet<Order> Orders => Set<Order>();
 }

@@ -60,5 +60,6 @@ app.SetupIdentityEndpoint();
 app.SetupProductEndPoint();
 app.SetupSaleEndpoint();
 app.SetupBasketEndpoint();
+app.SetupOrderEndpoint();
 
 app.Run();

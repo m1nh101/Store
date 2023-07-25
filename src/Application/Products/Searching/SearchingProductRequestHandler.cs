@@ -20,6 +20,7 @@ public sealed class SearchingProductRequestHandler
     var specification = new SearchingProductSpecification(request);
 
     var products = await _context.Products
+      .Include(e => e.Sale)
       .Where(specification.ToExpression())
       .AsNoTracking()
       .Select(specification.ToSelection())

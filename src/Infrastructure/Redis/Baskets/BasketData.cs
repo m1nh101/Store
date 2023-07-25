@@ -3,7 +3,7 @@ using Redis.OM.Modeling;
 
 namespace Infrastructure.Redis.Baskets;
 
-[Document(StorageType = StorageType.Json)]
+[Document(StorageType = StorageType.Json, Prefixes = new string[] { "Baskets" })]
 public sealed class BasketData : Basket
 {
   [RedisIdField, Indexed]

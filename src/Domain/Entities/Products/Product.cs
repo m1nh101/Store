@@ -22,9 +22,22 @@ public class Product : Entity
   public Identitifer Id { get; private set; } = null!;
   public string Name { get; private set; } = string.Empty;
   public string Brand { get; private set; } = string.Empty;
-  public double Price { get; private set; }
+  
   public int Stock { get; private set; }
   public ProductState State { get; private set; } = ProductState.New;
+
+  private double _price;
+  public double Price
+  {
+    get
+    {
+      if (Sale == null)
+        return _price;
+
+      return _price - (_price * Sale.Value / 100);
+    }
+    set => _price = value;
+  }
 
   public void ChangeStatusTo(ProductState state) => State = state;
 
