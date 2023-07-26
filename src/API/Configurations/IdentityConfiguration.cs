@@ -43,7 +43,6 @@ public static class IdentityConfiguration
             return Task.CompletedTask;
           }
         };
-
       });
 
     services.AddAuthorization(opt =>

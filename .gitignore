@@ -400,3 +400,5 @@ FodyWeavers.xsd
 **/**/bin
 **/**/obj
 .vscode
+
+src/ui/node_modules

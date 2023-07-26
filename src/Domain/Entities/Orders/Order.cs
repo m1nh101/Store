@@ -15,7 +15,17 @@ public class Order : AggregateRoot
   public Identitifer UserId { get; private set; } = null!;
   public OrderState Status { get; private set; }
 
-  public void ChangeStatus(OrderState state) => Status = state;
+  public void ChangeStatus(OrderState state)
+  {
+    switch (state)
+    {
+      case OrderState.Shipping:
+        AddEvent(new OrderPaidEvent(this));
+        break;
+      default:
+        break;
+    }
+  }
 
   public IEnumerable<OrderItem> Items { get; private set; } = null!;
 

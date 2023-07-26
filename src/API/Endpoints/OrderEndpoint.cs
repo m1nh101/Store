@@ -1,4 +1,5 @@
-﻿using Application.Orders.Create;
+﻿using Application.Orders.Checkout;
+using Application.Orders.Create;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,6 +9,7 @@ public static class OrderEndpoint
 {
   private const string ORDER_TAG = "Order";
   private const string CREATE_ORDER = "/api/orders";
+  private const string ORDER_PAYMENT_SUCCESS = "/api/orders/{id}?checkout=success";
 
   public static WebApplication SetupOrderEndpoint(this WebApplication app)
   {
@@ -20,6 +22,19 @@ public static class OrderEndpoint
       return Results.Ok(response);
     }).RequireAuthorization("SignedInUser")
       .WithTags(ORDER_TAG);
+
+    app.MapGet(ORDER_PAYMENT_SUCCESS, async ([FromServices] IMediator mediator, [FromRoute] int id) =>
+    {
+      var request = new OrderCheckoutRequest()
+      {
+        Id = id,
+        State = Domain.Enums.OrderState.Shipping
+      };
+
+      var response = await mediator.Send(request);
+
+      return Results.Ok(response);
+    });
 
     return app;
   }
