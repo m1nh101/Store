@@ -20,6 +20,17 @@ builder.Services.AddCookiePolicy(opt =>
   opt.HttpOnly = Microsoft.AspNetCore.CookiePolicy.HttpOnlyPolicy.Always;
 });
 
+builder.Services.AddCors(opt =>
+{
+  opt.AddPolicy("_cors", policy =>
+  {
+    policy.AllowAnyHeader()
+      .AllowAnyMethod()
+      .AllowCredentials()
+      .SetIsOriginAllowed(e => new Uri(e).Host == "localhost");
+  });
+});
+
 builder.Services.ConfigureInfrastructure(builder.Configuration);
 
 builder.Services.ConfigureApplication();
@@ -47,6 +58,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("_cors");
 
 app.UseCookiePolicy();
 
