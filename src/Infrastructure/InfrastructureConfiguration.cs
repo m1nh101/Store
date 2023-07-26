@@ -1,11 +1,13 @@
 ﻿using Application.Contracts;
 using Infrastructure.Database;
+using Infrastructure.Payment;
 using Infrastructure.Redis.Baskets;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Redis.OM;
 using Redis.OM.Contracts;
+using Stripe;
 
 namespace Infrastructure;
 
@@ -38,10 +40,14 @@ public static class InfrastructureConfiguration
       return new RedisConnectionProvider(connection);
     });
 
+    StripeConfiguration.ApiKey = configuration["Stripe:ApiKey"];
+
     services.AddScoped<IStoreContext, StoreContext>();
     services.AddScoped<IBasketRepository, BasketRepository>();
 
     services.AddSingleton<DatabaseMigration>();
+
+    services.AddScoped<CreateStripePaymentSession>();
 
     return services;
   }
