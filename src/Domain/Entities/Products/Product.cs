@@ -13,13 +13,13 @@ public class Product : Entity
 
   public Product(string name, string brand, double price)
   {
-    Id = Identitifer.Init();
+    Id = Identifier.Init();
     Name = name;
     Brand = brand;
     Price = price;
   }
 
-  public Identitifer Id { get; private set; } = null!;
+  public Identifier Id { get; private set; } = null!;
   public string Name { get; private set; } = string.Empty;
   public string Brand { get; private set; } = string.Empty;
   
@@ -44,7 +44,7 @@ public class Product : Entity
   private readonly List<ProductImage> _images = new();
   public IReadOnlyCollection<ProductImage> Images => _images.AsReadOnly();
 
-  public Identitifer? SaleId { get; private set; } = null;
+  public Identifier? SaleId { get; private set; } = null;
   public virtual Sale? Sale { get; private set; } = null;
 
   public void SetSaleCampain(Sale sale) => Sale = sale;

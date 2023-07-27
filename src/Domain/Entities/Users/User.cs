@@ -9,14 +9,14 @@ public class User : Entity
 
   public User(string fullName, string email, string rawPassword, string? id = "", string username = "")
   {
-    Id = Identitifer.Init(id);
+    Id = Identifier.Init(id);
     FullName = fullName;
     Email = new Email(email);
     Password = Password.Init(rawPassword);
     UserName = username;
   }
 
-  public Identitifer Id { get; private set; } = null!;
+  public Identifier Id { get; private set; } = null!;
 
   public string FullName { get; private set; } = string.Empty;
   public Email Email { get; private set; } = null!;

@@ -7,11 +7,11 @@ namespace Application.Products.Specifications;
 
 public sealed class GetProductById : Specification<Product>
 {
-  private readonly Identitifer _id;
+  private readonly Identifier _id;
 
   public GetProductById(string id)
   {
-    _id = Identitifer.Init(id);
+    _id = Identifier.Init(id);
   }
 
   public override Expression<Func<Product, bool>> ToExpression()

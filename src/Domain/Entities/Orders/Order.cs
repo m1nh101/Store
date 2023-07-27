@@ -12,7 +12,7 @@ public class Order : AggregateRoot
   public int Id { get; private set; }
   public Address Address { get; private set; } = null!;
   public DateTime PaidTime { get; private set; }
-  public Identitifer UserId { get; private set; } = null!;
+  public Identifier UserId { get; private set; } = null!;
   public OrderState Status { get; private set; }
 
   public void ChangeStatus(OrderState state)
@@ -33,7 +33,7 @@ public class Order : AggregateRoot
   {
     var order = new Order
     {
-      UserId = Identitifer.Init(userId),
+      UserId = Identifier.Init(userId),
       Address = new Address { Address1 = "temp"},
       Items = items
     };

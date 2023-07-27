@@ -22,7 +22,7 @@ public sealed class CreateSaleCampainRequestHandle
 
     if(request.Products is not null)
     {
-      var productIds = request.Products.Select(e => Identitifer.Init(e));
+      var productIds = request.Products.Select(e => Identifier.Init(e));
 
       var products = await _context.Products
         .Where(d => productIds.Any(e => e.Equals(d.Id)))

@@ -9,14 +9,14 @@ public sealed class Sale : Entity
 
   public Sale(string name, DateTime start, DateTime end, short value)
   {
-    Id = Identitifer.Init();
+    Id = Identifier.Init();
     Name = name;
     StartDate = start;
     EndDate = end;
     Value = value;
   }
 
-  public Identitifer Id { get; private set; } = null!;
+  public Identifier Id { get; private set; } = null!;
   public string Name { get; private set; } = string.Empty;
   public DateTime StartDate { get; private set; }
   public DateTime EndDate { get; private set; }

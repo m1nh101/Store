@@ -1,10 +1,10 @@
 namespace Domain.ValueObjects;
 
-public sealed record Identitifer
+public sealed record Identifier
 {
   public required string Id { get; init; }
 
-  public static Identitifer Init(string? id = "")
+  public static Identifier Init(string? id = "")
   {
     if(string.IsNullOrEmpty(id))
       return new() { Id = Guid.NewGuid().ToString().Replace("-", "") };

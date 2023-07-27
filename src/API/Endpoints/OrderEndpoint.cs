@@ -1,5 +1,8 @@
 ﻿using Application.Orders.Checkout;
 using Application.Orders.Create;
+using Application.Orders.Get.AllOrders;
+using Application.Orders.Get.UserOrders;
+using Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,7 +12,9 @@ public static class OrderEndpoint
 {
   private const string ORDER_TAG = "Order";
   private const string CREATE_ORDER = "/api/orders";
-  private const string ORDER_PAYMENT_SUCCESS = "/api/orders/{id}?checkout=success";
+  private const string ORDER_PAYMENT_SUCCESS = "/api/orders/{id}/success";
+  private const string GET_ORDER_BY_USER = "/api/orders";
+  private const string GET_ORDER = "/api/admin/orders";
 
   public static WebApplication SetupOrderEndpoint(this WebApplication app)
   {
@@ -34,7 +39,39 @@ public static class OrderEndpoint
       var response = await mediator.Send(request);
 
       return Results.Ok(response);
-    });
+    }).WithTags(ORDER_TAG);
+
+    app.MapGet(GET_ORDER_BY_USER, async ([FromServices] IMediator mediator,
+      [FromQuery] OrderState state) =>
+    {
+      var request = new GetUserOrderRequest()
+      {
+        State = state,
+      };
+
+      var response = await mediator.Send(request);
+
+      return Results.Ok(response.Data);
+    }).WithOpenApi()
+      .WithTags(ORDER_TAG)
+      .RequireAuthorization("SignedInUser");
+
+    app.MapGet(GET_ORDER, async ([FromServices] IMediator mediator,
+      [FromQuery] OrderState state,
+      [FromQuery] DateTime date) =>
+    {
+      var request = new GetAllOrderRequest
+      {
+        State = state,
+        Date = date,
+      };
+
+      var response = await mediator.Send(request);
+
+      return Results.Ok(response.Data);
+    }).WithOpenApi()
+      .WithTags(ORDER_TAG)
+      .RequireAuthorization("SuperUser");
 
     return app;
   }

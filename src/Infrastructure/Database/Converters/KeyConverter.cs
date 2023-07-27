@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.Database.Converters;
 
-internal class KeyConverter : ValueConverter<Identitifer, string>
+internal class KeyConverter : ValueConverter<Identifier, string>
 {
   public KeyConverter()
-    : base(e => e.Id, v => new Identitifer { Id = v })
+    : base(e => e.Id, v => new Identifier { Id = v })
   {
 
   }
