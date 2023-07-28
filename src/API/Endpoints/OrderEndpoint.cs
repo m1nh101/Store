@@ -1,6 +1,7 @@
 ﻿using Application.Orders.Checkout;
 using Application.Orders.Create;
 using Application.Orders.Get.AllOrders;
+using Application.Orders.Get.Detail;
 using Application.Orders.Get.UserOrders;
 using Domain.Enums;
 using MediatR;
@@ -15,6 +16,7 @@ public static class OrderEndpoint
   private const string ORDER_PAYMENT_SUCCESS = "/api/orders/{id}/success";
   private const string GET_ORDER_BY_USER = "/api/orders";
   private const string GET_ORDER = "/api/admin/orders";
+  private const string GET_ORDER_DETAIL = "/api/orders/{id}";
 
   public static WebApplication SetupOrderEndpoint(this WebApplication app)
   {
@@ -72,6 +74,19 @@ public static class OrderEndpoint
     }).WithOpenApi()
       .WithTags(ORDER_TAG)
       .RequireAuthorization("SuperUser");
+
+    app.MapGet(GET_ORDER_DETAIL, async ([FromServices] IMediator mediator,
+      [FromRoute] int id) =>
+    {
+      var request = new GetOrderDetailRequest() { Id = id };
+
+      var response = await mediator.Send(request);
+
+      return Results.Ok(response);
+
+    }).WithOpenApi()
+      .WithTags(ORDER_TAG)
+      .RequireAuthorization("SignedInUser");
 
     return app;
   }

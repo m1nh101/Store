@@ -4,4 +4,5 @@ public interface IUserContext
 {
   string Id { get; }
   string Email { get; }
+  bool IsSuperUser { get; }
 }
