@@ -20,7 +20,6 @@ public class Product : Entity
     Price = price;
   }
 
-  public Identifier Id { get; private set; } = null!;
   public string Name { get; private set; } = string.Empty;
   public string Brand { get; private set; } = string.Empty;
  

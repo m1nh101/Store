@@ -16,7 +16,6 @@ public sealed class Sale : Entity
     Value = value;
   }
 
-  public Identifier Id { get; private set; } = null!;
   public string Name { get; private set; } = string.Empty;
   public DateTime StartDate { get; private set; }
   public DateTime EndDate { get; private set; }

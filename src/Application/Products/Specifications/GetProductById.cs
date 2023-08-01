@@ -1,21 +1,12 @@
-﻿using Domain.Abstracts;
-using Domain.Entities.Products;
-using Domain.ValueObjects;
-using System.Linq.Expressions;
+﻿using Domain.Entities.Products;
+using Domain.Specifications;
 
 namespace Application.Products.Specifications;
 
-public sealed class GetProductById : Specification<Product>
+public sealed class GetProductById : GetEntityById<Product>
 {
-  private readonly Identifier _id;
-
   public GetProductById(string id)
+    :base(id)
   {
-    _id = Identifier.Init(id);
-  }
-
-  public override Expression<Func<Product, bool>> ToExpression()
-  {
-    return e => e.Id.Equals(_id);
   }
 }

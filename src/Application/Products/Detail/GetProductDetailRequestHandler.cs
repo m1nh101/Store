@@ -1,5 +1,6 @@
 ﻿using Application.Contracts;
 using Application.Products.Specifications;
+using Domain.Specifications;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

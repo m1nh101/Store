@@ -45,7 +45,7 @@ public static class BasketEndpoint
     app.MapDelete(RemoveItem, async ([FromServices] IMediator mediator,
       [FromRoute] string id) =>
     {
-      var request = new RemoveItemRequest() { ProductId = id };
+      var request = new RemoveItemRequest() { ItemId = id };
 
       var response = await mediator.Send(request);
 

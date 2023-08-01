@@ -16,7 +16,7 @@ public class Basket
   /// <returns>total basket price after item change</returns>
   public double AddItem(BasketItem item)
   {
-    var existItem = Items.FirstOrDefault(e => e.ProductId == item.ProductId);
+    var existItem = Items.FirstOrDefault(e => e.ItemId == item.ItemId);
 
     if (existItem == null)
       Items.Add(item);
@@ -32,10 +32,10 @@ public class Basket
   /// </summary>
   /// <param name="item"></param>
   /// <returns>total basket price after item change</returns>
-  public double RemoveItem(string productId)
+  public double RemoveItem(string itemId)
   {
-    var existItem = Items.FirstOrDefault(e => e.ProductId == productId)
-      ?? throw new DomainException($"product id: {productId} not found in basket");
+    var existItem = Items.FirstOrDefault(e => e.ItemId == itemId)
+      ?? throw new DomainException($"product id: {itemId} not found in basket");
 
     Items.Remove(existItem);
 

@@ -32,7 +32,7 @@ public sealed class CreateOrderRequestHandler : IRequestHandler<CreateOrderReque
       Name = e.Name,
       Price = e.Price,
       Quantity = e.Quantity,
-      ProductId = Identifier.Init(e.ProductId)
+      ProductId = Identifier.Init(e.ItemId)
     }).ToList();
 
     var order = Order.Create(_userContext.Id, items);

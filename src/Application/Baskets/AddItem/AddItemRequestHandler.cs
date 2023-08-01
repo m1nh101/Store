@@ -41,9 +41,9 @@ public sealed class AddItemRequestHandler : IRequestHandler<AddItemRequest, Hand
 
     var total = basket.AddItem(new BasketItem
     {
-      ProductId = item.Id.ToString(),
+      ItemId = item.Id.ToString(),
       Quantity = request.Quantity,
-      Price = product.Price,
+      Price = product.Price + item.AdditionPrice,
       Name = product.Name,
       Image = product.Images.First().ToString(),
     });
