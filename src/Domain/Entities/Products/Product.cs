@@ -1,5 +1,4 @@
 using Domain.Abstracts;
-using Domain.Comparers;
 using Domain.Enums;
 using Domain.Specifications;
 using Domain.ValueObjects;
@@ -45,8 +44,6 @@ public class Product : Entity
 
   public void AddItems(params ProductItem[] items)
   {
-    var existItems = _items.Distinct(new ProductItemComparer());
-
     foreach(var item in items)
     {
       var specification = new ProductItemSpecification(item);
