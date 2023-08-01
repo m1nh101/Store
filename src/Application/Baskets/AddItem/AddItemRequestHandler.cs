@@ -32,11 +32,16 @@ public sealed class AddItemRequestHandler : IRequestHandler<AddItemRequest, Hand
     if (product is null)
       return HandleResponse.Fail(new { Message = "product not found" });
 
+    var item = product.GetItem(request.ItemId);
+
+    if(item is null)
+      return HandleResponse.Fail(new { Message = "item not found" });
+
     var basket = await _baskets.Get(_userContext.Id);
 
     var total = basket.AddItem(new BasketItem
     {
-      ProductId = product.Id.ToString(),
+      ProductId = item.Id.ToString(),
       Quantity = request.Quantity,
       Price = product.Price,
       Name = product.Name,

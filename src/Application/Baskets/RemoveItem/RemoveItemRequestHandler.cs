@@ -19,7 +19,7 @@ public sealed class RemoveItemRequestHandler : IRequestHandler<RemoveItemRequest
   {
     var basket = await _baskets.Get(_userContext.Id);
 
-    basket.RemoveItem(request.ProductId);
+    basket.RemoveItem(request.ItemId);
 
     await _baskets.Save(basket);
 

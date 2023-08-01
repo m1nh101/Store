@@ -42,6 +42,14 @@ public class Product : Entity
   private readonly List<ProductItem> _items = new();
   public IReadOnlyCollection<ProductItem> Items => _items.AsReadOnly();
 
+
+  public ProductItem? GetItem(string id)
+  {
+    var specification = new GetProductItemByIdSpecification(id);
+
+    return _items.FirstOrDefault(specification.IsSastifiedBy);
+  }
+
   public void AddItems(params ProductItem[] items)
   {
     foreach(var item in items)

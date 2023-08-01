@@ -5,6 +5,7 @@ namespace Application.Baskets.AddItem;
 
 public sealed record AddItemRequest : IRequest<HandleResponse>
 {
+  public required string ItemId { get; init; }
   public required string ProductId { get; init; }
   public required int Quantity { get; init; }
 }

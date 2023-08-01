@@ -5,5 +5,5 @@ namespace Application.Baskets.RemoveItem;
 
 public sealed record RemoveItemRequest : IRequest<HandleResponse>
 {
-  public required string ProductId { get; set; }
+  public required string ItemId { get; set; }
 }
