@@ -1,7 +1,9 @@
 using Domain.Abstracts;
+using Domain.Comparers;
 using Domain.Enums;
-using Domain.Exceptions;
+using Domain.Specifications;
 using Domain.ValueObjects;
+using System.Linq;
 
 namespace Domain.Entities.Products;
 
@@ -22,8 +24,7 @@ public class Product : Entity
   public Identifier Id { get; private set; } = null!;
   public string Name { get; private set; } = string.Empty;
   public string Brand { get; private set; } = string.Empty;
-  
-  public int Stock { get; private set; }
+ 
   public ProductState State { get; private set; } = ProductState.New;
 
   private double _price;
@@ -37,6 +38,39 @@ public class Product : Entity
       return _price - (_price * Sale.Value / 100);
     }
     set => _price = value;
+  }
+
+  private readonly List<ProductItem> _items = new();
+  public IReadOnlyCollection<ProductItem> Items => _items.AsReadOnly();
+
+  public void AddItems(params ProductItem[] items)
+  {
+    var existItems = _items.Distinct(new ProductItemComparer());
+
+    foreach(var item in items)
+    {
+      var specification = new ProductItemSpecification(item);
+
+      var existItem = _items.FirstOrDefault(specification.IsSastifiedBy);
+
+      if (existItem is null)
+        _items.Add(item);
+      else
+      {
+        existItem.ChangeQuantityTo(item.Quantity);
+        existItem.ChangePriceTo(item.AdditionPrice);
+      }
+    }
+  }
+
+  public void RemoveItem(string id)
+  {
+    var item = _items.FirstOrDefault(e => e.Equals(Identifier.Init(id)));
+
+    if (item is null)
+      throw new NullReferenceException(nameof(item));
+
+    _items.Remove(item);
   }
 
   public void ChangeStatusTo(ProductState state) => State = state;
@@ -54,14 +88,6 @@ public class Product : Entity
     Name = product.Name;
     Brand = product.Brand;
     Price = product.Price;
-  }
-
-  public void UpdateStock(int stock)
-  {
-    if (stock < 0)
-      throw new DomainException("stock can be negative");
-
-    Stock = stock;
   }
 
   public void AddImages(params string[] urls)

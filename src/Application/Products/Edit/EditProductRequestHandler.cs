@@ -27,7 +27,6 @@ public sealed class EditProductRequestHandler : IRequestHandler<EditProductReque
     var payload = new Product(request.Name, request.Brand, request.Price);
 
     product.Update(payload);
-    product.UpdateStock(request.Stock);
 
     await _context.Commit(cancellationToken);
 

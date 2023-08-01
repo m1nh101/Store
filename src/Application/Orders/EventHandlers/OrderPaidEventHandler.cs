@@ -21,17 +21,17 @@ public sealed class OrderPaidEventHandler : INotificationHandler<OrderPaidEvent>
 
     var products = await _context.Products.Where(specification.ToExpression()).ToListAsync(cancellationToken);
 
-    foreach(var product in products)
-    {
-      var item = notification.Order.Items.FirstOrDefault(e => e.ProductId.Equals(product.Id));
+    //foreach(var product in products)
+    //{
+    //  var item = notification.Order.Items.FirstOrDefault(e => e.ProductId.Equals(product.Id));
 
-      if (item == null)
-        throw new NullReferenceException(nameof(item));
+    //  if (item == null)
+    //    throw new NullReferenceException(nameof(item));
 
-      var stock = product.Stock - item.Quantity;
+    //  var stock = product.Stock - item.Quantity;
 
-      product.UpdateStock(stock);
-    }
+    //  product.UpdateStock(stock);
+    //}
 
     await _context.Commit(cancellationToken);
   }

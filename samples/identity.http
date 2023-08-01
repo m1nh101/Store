@@ -1,0 +1,29 @@
+@host = https://localhost:7284/api/identity
+
+# @name Login
+
+POST {{host}}/auth
+Content-Type: application/json
+
+{
+  "username": "admin@store.com",
+  "password": "Nodejs2002"
+}
+
+###
+
+# @name Register
+
+POST {{host}}/register
+Content-Type: application/json
+
+{
+  "fullName": "Super User",
+  "email": "admin@store.com",
+  "password": "Nodejs2002",
+  "claims": [
+    {
+      "claimType": "role",
+      "value": "admin"
+    }]
+}

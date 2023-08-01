@@ -21,7 +21,14 @@ public sealed class AddNewProductRequestHandler
     if(request.Images != null)
       product.AddImages(request.Images);
 
-    product.UpdateStock(request.Stock);
+    if(request.Items != null)
+    {
+      var items = request.Items
+        .Select(e => new ProductItem(e.Color, e.Size, e.Quantity, e.Price))
+        .ToArray();
+
+      product.AddItems(items);
+    }
 
     await _context.Products.AddAsync(product, cancellationToken);
 

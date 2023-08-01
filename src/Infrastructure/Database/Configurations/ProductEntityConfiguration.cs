@@ -44,5 +44,16 @@ public sealed class ProductEntityConfiguration : IEntityTypeConfiguration<Produc
 
       sp.WithOwner().HasForeignKey("ProductId");
     });
+
+    builder.OwnsMany(e => e.Items, sp =>
+    {
+      sp.ToTable("Items");
+
+      sp.HasKey(e => e.Id);
+
+      sp.Property(e => e.Id).HasConversion<KeyConverter>();
+
+      sp.WithOwner().HasForeignKey("ProductId");
+    });
   }
 }

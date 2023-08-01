@@ -32,9 +32,6 @@ public sealed class AddItemRequestHandler : IRequestHandler<AddItemRequest, Hand
     if (product is null)
       return HandleResponse.Fail(new { Message = "product not found" });
 
-    if (product.Stock < request.Quantity)
-      throw new ArgumentOutOfRangeException(nameof(request.Quantity));
-
     var basket = await _baskets.Get(_userContext.Id);
 
     var total = basket.AddItem(new BasketItem

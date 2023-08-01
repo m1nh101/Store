@@ -1,0 +1,92 @@
+@host = https://localhost:7284/api/products
+
+# @name Searching
+
+POST {{host}}/search
+Content-Type: application/json
+
+{
+  "name": "",
+  "brand": "",
+  "priceFrom": null,
+  "priceTo": null
+}
+
+###
+
+# @name CreateNewProduct
+
+POST {{host}}
+Content-Type: application/json
+
+{
+  "name": "Áo Super Fake Don't Buy It",
+  "brand": "Local Brand",
+  "price": 100000,
+  "images": [
+    "search_google.jpg"
+  ],
+  "items": [
+    {
+      "color": "White",
+      "size": "39",
+      "quantity": 5,
+      "price": 0
+    },
+    {
+      "color": "White",
+      "size": "38",
+      "quantity": 2,
+      "price": 0
+    }
+  ]
+}
+
+###
+# @name EditProduct
+
+@product_id = 00dcf21c73de41ba82323a0f156ed902
+
+PATCH {{host}}/{{product_id}}
+Content-Type: application/json
+
+{
+  "name": "Áo Super Fake Don't Buy It",
+  "brand": "Local Brand",
+  "price": 110000,
+}
+
+###
+# @name AddProductItem
+
+POST {{host}}/{{product_id}}/items
+Content-Type: application/json
+
+{
+  "color": "Black",
+  "size": "39",
+  "quantity": 10,
+  "additionPrice": 5000
+}
+
+###
+# @name EditProductItem
+
+@item_id = 113acd6effda4a4da832aef6823cb67d
+PATCH {{host}}/{{product_id}}/items/{{item_id}}
+Content-Type: application/json
+
+{
+  "additionPrice": 10000.00,
+  "quantity": 12
+}
+
+###
+# @name DeleteProductItem
+
+DELETE {{host}}/{{product_id}}/items/{{item_id}}
+
+###
+# @name GetProductDetail
+
+GET {{host}}/{{product_id}}

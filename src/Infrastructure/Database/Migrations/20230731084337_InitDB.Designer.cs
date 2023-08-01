@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Infrastructure.Migrations
+namespace Infrastructure.Database.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    [Migration("20230725024215_OrderTable")]
-    partial class OrderTable
+    [Migration("20230731084337_InitDB")]
+    partial class InitDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,6 +38,9 @@ namespace Infrastructure.Migrations
 
                     b.Property<DateTime>("PaidTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -73,9 +76,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("State")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Stock")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -141,6 +141,16 @@ namespace Infrastructure.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.ValueObjects.Identifier", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Identifier");
+                });
+
             modelBuilder.Entity("Domain.Entities.Orders.Order", b =>
                 {
                     b.OwnsMany("Domain.Entities.Orders.OrderItem", "Items", b1 =>
@@ -161,15 +171,29 @@ namespace Infrastructure.Migrations
                             b1.Property<double>("Price")
                                 .HasColumnType("float");
 
+                            b1.Property<string>("ProductIdId")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(450)");
+
                             b1.Property<int>("Quantity")
                                 .HasColumnType("int");
 
                             b1.HasKey("OrderId", "Id");
 
+                            b1.HasIndex("ProductIdId");
+
                             b1.ToTable("OrderItems", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("OrderId");
+
+                            b1.HasOne("Domain.ValueObjects.Identifier", "ProductId")
+                                .WithMany()
+                                .HasForeignKey("ProductIdId")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
+
+                            b1.Navigation("ProductId");
                         });
 
                     b.OwnsOne("Domain.ValueObjects.Address", "Address", b1 =>
@@ -207,6 +231,42 @@ namespace Infrastructure.Migrations
                         .WithMany("Products")
                         .HasForeignKey("SaleId");
 
+                    b.OwnsMany("Domain.Entities.Products.ProductItem", "Stocks", b1 =>
+                        {
+                            b1.Property<string>("Id")
+                                .HasColumnType("nvarchar(450)");
+
+                            b1.Property<double>("AdditionPrice")
+                                .HasColumnType("float");
+
+                            b1.Property<string>("Color")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<DateTime>("LastTimeModified")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<string>("ProductId")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(450)");
+
+                            b1.Property<int>("Quantity")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Size")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("ProductId");
+
+                            b1.ToTable("Items", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProductId");
+                        });
+
                     b.OwnsMany("Domain.ValueObjects.ProductImage", "Images", b1 =>
                         {
                             b1.Property<string>("ProductId")
@@ -234,6 +294,8 @@ namespace Infrastructure.Migrations
                     b.Navigation("Images");
 
                     b.Navigation("Sale");
+
+                    b.Navigation("Stocks");
                 });
 
             modelBuilder.Entity("Domain.Entities.Users.User", b =>
