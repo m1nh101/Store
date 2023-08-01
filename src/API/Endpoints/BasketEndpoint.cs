@@ -1,4 +1,5 @@
-﻿using Application.Baskets.AddItem;
+﻿using API.Configurations;
+using Application.Baskets.AddItem;
 using Application.Baskets.Clear;
 using Application.Baskets.Get;
 using Application.Baskets.RemoveItem;
@@ -9,26 +10,26 @@ namespace API.Endpoints;
 
 public static class BasketEndpoint
 {
-  private const string TAG_NAME = "Basket";
-  private const string GET_BASKET = "/api/baskets";
-  private const string ADD_ITEM = "/api/baskets/items";
-  private const string REMOVE_ITEM = "/api/baskets/items/{id}";
-  private const string CLEAR_BASKET = "/api/baskets";
+  private const string TagName = "Basket";
+  private const string GetBasket = "/api/baskets";
+  private const string AddItem = "/api/baskets/items";
+  private const string RemoveItem = "/api/baskets/items/{id}";
+  private const string ClearBasket = "/api/baskets";
 
   public static WebApplication SetupBasketEndpoint(this WebApplication app)
   {
-    app.MapGet(GET_BASKET, async ([FromServices] IMediator mediator) =>
+    app.MapGet(GetBasket, async ([FromServices] IMediator mediator) =>
     {
       var request = new GetBasketRequest();
 
       var response = await mediator.Send(request);
 
       return Results.Ok(response.Data);
-    }).RequireAuthorization("SignedInUser")
+    }).RequireAuthorization(AuthorizePolicy.SignedIn)
       .WithOpenApi()
-      .WithTags(TAG_NAME);
+      .WithTags(TagName);
 
-    app.MapPost(ADD_ITEM, async ([FromServices] IMediator mediator,
+    app.MapPost(AddItem, async ([FromServices] IMediator mediator,
       [FromBody] AddItemRequest request) =>
     {
       var response = await mediator.Send(request);
@@ -38,9 +39,10 @@ public static class BasketEndpoint
 
       return Results.Ok(response.Data);
     }).WithOpenApi()
-      .WithTags(TAG_NAME);
+      .WithTags(TagName)
+      .RequireAuthorization(AuthorizePolicy.SignedIn);
 
-    app.MapDelete(REMOVE_ITEM, async ([FromServices] IMediator mediator,
+    app.MapDelete(RemoveItem, async ([FromServices] IMediator mediator,
       [FromRoute] string id) =>
     {
       var request = new RemoveItemRequest() { ProductId = id };
@@ -52,9 +54,10 @@ public static class BasketEndpoint
 
       return Results.BadRequest(response.Error);
     }).WithOpenApi()
-      .WithTags(TAG_NAME);
+      .WithTags(TagName)
+      .RequireAuthorization(AuthorizePolicy.SignedIn);
 
-    app.MapDelete(CLEAR_BASKET, async ([FromServices] IMediator mediator) =>
+    app.MapDelete(ClearBasket, async ([FromServices] IMediator mediator) =>
     {
       var request = new ClearBasketRequest();
 
@@ -62,7 +65,8 @@ public static class BasketEndpoint
 
       return Results.NoContent();
     }).WithOpenApi()
-      .WithTags(TAG_NAME);
+      .WithTags(TagName)
+      .RequireAuthorization(AuthorizePolicy.SignedIn);
 
     return app;
   }

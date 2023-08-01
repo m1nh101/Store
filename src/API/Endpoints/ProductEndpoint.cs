@@ -1,4 +1,5 @@
-﻿using Application.Products.AddItem;
+﻿using API.Configurations;
+using Application.Products.AddItem;
 using Application.Products.Detail;
 using Application.Products.Edit;
 using Application.Products.New;
@@ -12,26 +13,26 @@ namespace API.Endpoints;
 
 public static class ProductEndpoint
 {
-  private const string TAG_NAME = "Product";
-  private const string GET_PRODUCTS = "/api/products/search";
-  private const string GET_PRODUCT = "/api/products/{id}";
-  private const string POST_PRODUCTS = "/api/products";
-  private const string PATCH_PRODUCTS = "/api/products/{id}";
-  private const string ADD_ITEM = "/api/products/{id}/items";
-  private const string UPDATE_ITEM = "/api/products/{id}/items/{itemId}";
-  private const string REMOVE_ITEM = "/api/products/{id}/items/{itemId}";
+  private const string TagName = "Product";
+  private const string GetProducts = "/api/products/search";
+  private const string GetProduct = "/api/products/{id}";
+  private const string PostProducts = "/api/products";
+  private const string PatchProducts = "/api/products/{id}";
+  private const string AddItem = "/api/products/{id}/items";
+  private const string UpdateItem = "/api/products/{id}/items/{itemId}";
+  private const string RemoveItem = "/api/products/{id}/items/{itemId}";
 
   public static WebApplication SetupProductEndPoint(this WebApplication app)
   {
-    app.MapPost(GET_PRODUCTS, async ([FromServices] IMediator mediator, [FromBody] SearchingProductRequest request) =>
+    app.MapPost(GetProducts, async ([FromServices] IMediator mediator, [FromBody] SearchingProductRequest request) =>
     {
       var response = await mediator.Send(request);
 
       return Results.Ok(response);
     }).WithOpenApi()
-      .WithTags(TAG_NAME);
+      .WithTags(TagName);
 
-    app.MapPost(POST_PRODUCTS, async ([FromServices] IMediator mediator, [FromBody] AddNewProductRequest request) =>
+    app.MapPost(PostProducts, async ([FromServices] IMediator mediator, [FromBody] AddNewProductRequest request) =>
     {
       var response = await mediator.Send(request);
 
@@ -40,10 +41,10 @@ public static class ProductEndpoint
 
       return Results.Ok(response.Data);
     }).WithOpenApi()
-      .WithTags(TAG_NAME)
-      .RequireAuthorization("SuperUser");
+      .WithTags(TagName)
+      .RequireAuthorization(AuthorizePolicy.SuperUser);
 
-    app.MapGet(GET_PRODUCT, async ([FromServices] IMediator mediator,
+    app.MapGet(GetProduct, async ([FromServices] IMediator mediator,
       [FromRoute] string id) =>
     {
       var request = new GetProductDetailRequest { Id = id };
@@ -52,9 +53,9 @@ public static class ProductEndpoint
 
       return Results.Ok(response);
     }).WithOpenApi()
-      .WithTags(TAG_NAME);
+      .WithTags(TagName);
 
-    app.MapPatch(PATCH_PRODUCTS, async ([FromServices] IMediator mediator,
+    app.MapPatch(PatchProducts, async ([FromServices] IMediator mediator,
       [FromRoute] string id,
       [FromBody] EditProductRequest request) =>
     {
@@ -67,9 +68,10 @@ public static class ProductEndpoint
 
       return Results.BadRequest(response.Error);
     }).WithOpenApi()
-      .WithTags(TAG_NAME);
+      .WithTags(TagName)
+      .RequireAuthorization(AuthorizePolicy.SuperUser);
 
-    app.MapPost(ADD_ITEM, async ([FromServices] IMediator mediator,
+    app.MapPost(AddItem, async ([FromServices] IMediator mediator,
       [FromRoute] string id,
       [FromBody] AddNewProductItemRequest request) =>
     {
@@ -79,9 +81,10 @@ public static class ProductEndpoint
 
       return Results.Ok(response);
     }).WithOpenApi()
-      .WithTags(TAG_NAME);
+      .WithTags(TagName)
+      .RequireAuthorization(AuthorizePolicy.SuperUser);
 
-    app.MapPatch(UPDATE_ITEM, async ([FromServices] IMediator mediator,
+    app.MapPatch(UpdateItem, async ([FromServices] IMediator mediator,
       [FromRoute] string id,
       [FromRoute] string itemId,
       [FromBody] UpdateProductItemRequest request) =>
@@ -92,9 +95,10 @@ public static class ProductEndpoint
 
       return Results.Ok(response);
     }).WithOpenApi()
-      .WithTags(TAG_NAME);
+      .WithTags(TagName)
+      .RequireAuthorization(AuthorizePolicy.SuperUser);
 
-    app.MapDelete(REMOVE_ITEM, async ([FromServices] IMediator mediator,
+    app.MapDelete(RemoveItem, async ([FromServices] IMediator mediator,
       [FromRoute] string id,
       [FromRoute] string itemId) =>
     {
@@ -108,7 +112,8 @@ public static class ProductEndpoint
 
       return Results.Ok(response);
     }).WithOpenApi()
-      .WithTags(TAG_NAME);
+      .WithTags(TagName)
+      .RequireAuthorization(AuthorizePolicy.SuperUser);
 
     return app;
   }

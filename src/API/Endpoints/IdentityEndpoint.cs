@@ -1,4 +1,5 @@
-﻿using Application.Users.Auth;
+﻿using API.Configurations;
+using Application.Users.Auth;
 using Application.Users.New;
 using Application.Users.Token;
 using MediatR;
@@ -8,14 +9,15 @@ namespace API.Endpoints;
 
 public static class IdentityEndpoint
 {
-  private const string ENDPONT_TAG = "Identity";
-  private const string SIGN_IN = "/api/identity/auth";
-  private const string SIGN_UP = "/api/identity/register";
-  private const string SIGN_OUT = "/api/identity/logout";
+  private const string TagName = "Identity";
+  private const string SignIn = "/api/identity/auth";
+  private const string SignUp = "/api/identity/register";
+  private const string SignOut = "/api/identity/logout";
+  private const string AccessToken = "access_token";
 
   public static WebApplication SetupIdentityEndpoint(this WebApplication app)
   {
-    app.MapPost(SIGN_IN, async ([FromServices] IMediator mediator,
+    app.MapPost(SignIn, async ([FromServices] IMediator mediator,
       HttpContext http,
       [FromBody] AuthenticateUserRequest request) =>
     {
@@ -23,7 +25,7 @@ public static class IdentityEndpoint
 
       if (response.Data != null)
       {
-        http.Response.Cookies.Append("access_token", (response.Data as GenerateTokenResult)!.Token);
+        http.Response.Cookies.Append(AccessToken, (response.Data as GenerateTokenResult)!.Token);
 
         return Results.Ok(new { message = "login success"});
       }
@@ -32,9 +34,9 @@ public static class IdentityEndpoint
 
     }).WithOpenApi()
       .WithName("Sign In")
-      .WithTags(ENDPONT_TAG);
+      .WithTags(TagName);
 
-    app.MapPost(SIGN_UP, async ([FromServices] IMediator mediator,
+    app.MapPost(SignUp, async ([FromServices] IMediator mediator,
       HttpContext http,
       [FromBody] CreateNewUserRequest request) =>
     {
@@ -42,7 +44,7 @@ public static class IdentityEndpoint
 
       if(response.Data != null)
       {
-        http.Response.Cookies.Append("access_token", (response.Data as GenerateTokenResult)!.Token);
+        http.Response.Cookies.Append(AccessToken, (response.Data as GenerateTokenResult)!.Token);
 
         return Results.Ok(new { message = "register success"});
       }
@@ -50,18 +52,18 @@ public static class IdentityEndpoint
       return Results.BadRequest(response.Error);
     }).WithOpenApi()
       .WithName("register new user")
-      .WithTags(ENDPONT_TAG);
+      .WithTags(TagName);
 
-    app.MapDelete(SIGN_OUT, (HttpContext http) =>
+    app.MapDelete(SignOut, (HttpContext http) =>
     {
-      http.Response.Cookies.Delete("access_token");
+      http.Response.Cookies.Delete(AccessToken);
 
       return Results.NoContent();
     }).WithOpenApi()
       .WithName("Sign out")
       .WithDescription("remove access_token")
-      .WithTags(ENDPONT_TAG)
-      .RequireAuthorization("SignedUser");
+      .WithTags(TagName)
+      .RequireAuthorization(AuthorizePolicy.SignedIn);
 
     return app;
   }

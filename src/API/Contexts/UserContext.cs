@@ -19,5 +19,5 @@ public sealed class UserContext : IUserContext
     ?? throw new NullReferenceException("how unauthenticate user can go to this");
 
   public bool IsSuperUser => _http.HttpContext?.User.FindFirstValue(ClaimTypes.Role)?.Equals("admin")
-    ?? throw new NullReferenceException("how unauthenticate user can go to this");
+    ?? false;
 }
