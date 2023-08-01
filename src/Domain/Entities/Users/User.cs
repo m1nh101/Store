@@ -16,8 +16,6 @@ public class User : Entity
     UserName = username;
   }
 
-  public Identifier Id { get; private set; } = null!;
-
   public string FullName { get; private set; } = string.Empty;
   public Email Email { get; private set; } = null!;
   public string UserName { get; private set; } = string.Empty;

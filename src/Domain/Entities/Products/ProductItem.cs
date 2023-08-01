@@ -23,7 +23,6 @@ public class ProductItem : Entity
     AdditionPrice = additionPrice;
   }
 
-  public Identifier Id { get; private set; } = null!;
   public string Color { get; private set; } = null!;
   public string Size { get; private set; } = null!;
   public int Quantity { get; private set; }

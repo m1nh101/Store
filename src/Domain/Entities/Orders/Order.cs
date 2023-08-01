@@ -9,7 +9,7 @@ public class Order : AggregateRoot
 {
   private Order() { }
 
-  public int Id { get; private set; }
+  public new int Id { get; private set; }
   public Address Address { get; private set; } = null!;
   public DateTime PaidTime { get; private set; }
   public Identifier UserId { get; private set; } = null!;
