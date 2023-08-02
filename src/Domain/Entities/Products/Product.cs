@@ -1,12 +1,12 @@
 using Domain.Abstracts;
 using Domain.Enums;
+using Domain.Events;
 using Domain.Specifications;
 using Domain.ValueObjects;
-using System.Linq;
 
 namespace Domain.Entities.Products;
 
-public class Product : Entity
+public class Product : AggregateRoot
 {
   private Product()
   {
@@ -91,7 +91,12 @@ public class Product : Entity
   {
     Name = product.Name;
     Brand = product.Brand;
-    Price = product.Price;
+    
+    if(Price != product.Price)
+    {
+      Price = product.Price;
+      AddEvent(new ProductPriceHasChangedEvent(this));
+    }
   }
 
   public void AddImages(params string[] urls)
