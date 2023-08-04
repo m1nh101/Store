@@ -26,7 +26,11 @@ public static class InfrastructureConfiguration
         connection = configuration.GetConnectionString("StoreConn");
 
       opt.UseSqlServer(connection,
-      x => x.MigrationsAssembly(typeof(InfrastructureConfiguration).Assembly.FullName));
+      x =>
+      {
+        x.MigrationsAssembly(typeof(InfrastructureConfiguration).Assembly.FullName);
+        x.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+      });
     });
 
     services.AddSingleton<IRedisConnectionProvider>(sp =>

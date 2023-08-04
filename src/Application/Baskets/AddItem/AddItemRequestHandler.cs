@@ -37,6 +37,9 @@ public sealed class AddItemRequestHandler : IRequestHandler<AddItemRequest, Hand
     if(item is null)
       return HandleResponse.Fail(new { Message = "item not found" });
 
+    if (item.Quantity < request.Quantity)
+      return HandleResponse.Fail(new { Message = "stock is not enough" });
+
     var basket = await _baskets.Get(_userContext.Id);
 
     var total = basket.AddItem(new BasketItem

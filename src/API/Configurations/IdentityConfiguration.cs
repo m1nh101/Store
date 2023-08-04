@@ -47,13 +47,13 @@ public static class IdentityConfiguration
 
     services.AddAuthorization(opt =>
     {
-      opt.AddPolicy("SuperUser", policy =>
+      opt.AddPolicy(AuthorizePolicy.SuperUser, policy =>
       {
         policy.RequireRole("admin")
           .RequireAuthenticatedUser();
       });
 
-      opt.AddPolicy("SignedInUser", policy =>
+      opt.AddPolicy(AuthorizePolicy.SignedIn, policy =>
       {
         policy.RequireAuthenticatedUser();
       });
